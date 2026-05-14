@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip show *)",
+      "Bash(/Users/qiankun/workplace/mcp-gateway/.venv/bin/python -c \"import mcp\")",
+      "WebSearch",
+      "Bash(curl -s https://pypi.org/pypi/mcp/json)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['info']['version']\\); print\\(d['info']['summary']\\); print\\(d['info']['requires_dist'][:10] if d['info']['requires_dist'] else 'none'\\)\")",
+      "Bash(curl -s https://pypi.org/pypi/sentence-transformers/json)",
+      "Bash(python3 -c ' *)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -sL https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/main/README.md)",
+      "Bash(uv sync *)",
+      "Bash(uv run *)",
+      "Bash(npm --version)",
+      "Bash(npm create *)",
+      "Bash(npm install *)",
+      "Bash(npm cache *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:8000/api/servers)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s -X POST http://localhost:8000/api/servers -H 'Content-Type: application/json' -d '{\"name\":\"测试HTTP Server\",\"transport_type\":\"http\",\"url\":\"http://localhost:9000/mcp\",\"auth_type\":\"none\"}')",
+      "Bash(curl -s -X POST http://localhost:8000/api/servers -H 'Content-Type: application/json' -d '{\"name\":\"测试stdio Server\",\"transport_type\":\"stdio\",\"command\":\"uvx\",\"args\":[\"mcp-server-test\"],\"auth_type\":\"none\"}')",
+      "Bash(curl -s -X DELETE http://localhost:8000/api/servers/2)",
+      "Bash(curl -s http://localhost:8000/api/servers/1/tools)",
+      "Bash(curl -s http://localhost:8000/)",
+      "Bash(curl -s -X DELETE http://localhost:8000/api/servers/1)",
+      "Bash(kill %1)",
+      "Bash(lsof -ti:8000)",
+      "Bash(xargs kill -9)",
+      "Bash(uv pip *)",
+      "Bash(uv add *)",
+      "Bash(curl -s -X POST http://localhost:8000/api/servers -H 'Content-Type: application/json' -d '{\"name\":\"Alibaba Code MCP\",\"transport_type\":\"http\",\"url\":\"https://mcp.alibaba-inc.com/code/mcp\",\"auth_type\":\"oauth\"}')",
+      "Bash(curl -s http://localhost:8000/api/servers/1/oauth-url)",
+      "Bash(curl *)",
+      "Bash(python3 -c \"import importlib.metadata; print\\(importlib.metadata.version\\('mcp'\\)\\)\")",
+      "Bash(/Users/qiankun/workplace/mcp-gateway/.venv/bin/python -c \"import importlib.metadata; print\\(importlib.metadata.version\\('mcp'\\)\\)\")",
+      "mcp__gateway__discover_tools",
+      "mcp__gateway__get_tool_schema",
+      "mcp__gateway__invoke_tool",
+      "mcp__gateway__list_tools"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "gateway"
+  ]
+}
