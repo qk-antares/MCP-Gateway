@@ -5,7 +5,7 @@ export interface ServerInfo {
   url?: string
   command?: string
   auth_type?: string
-  status: 'pending' | 'active' | 'error'
+  status: 'pending' | 'active' | 'error' | 'disabled'
   error_message?: string
   tool_count: number
   created_at: string

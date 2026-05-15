@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 
 OAUTH_CALLBACK_URL = "http://localhost:8000/api/oauth/callback"
 
-
 class OAuthFlowState:
     """管理单个 Server 的 OAuth 授权流程状态。"""
 
@@ -227,9 +226,9 @@ async def call_tool_on_server(server_id: int, tool_name: str, arguments: dict) -
     db = await get_db()
     server = await server_manager.get_server(db, server_id)
     if not server:
-        return json.dumps({"error": f"Server id={server_id} 不存在"})
+        return json.dumps({"error": f"Server id={server_id} 不存在"}, ensure_ascii=False)
     if server.status != "active":
-        return json.dumps({"error": f"Server '{server.name}' 状态为 {server.status}，无法调用"})
+        return json.dumps({"error": f"Server '{server.name}' 状态为 {server.status}，无法调用"}, ensure_ascii=False)
 
     auth_config = None
     row = await (await db.execute(
@@ -239,7 +238,7 @@ async def call_tool_on_server(server_id: int, tool_name: str, arguments: dict) -
         auth_config = json.loads(row["auth_config"])
 
     if server.transport_type != "http":
-        return json.dumps({"error": "当前仅支持 HTTP 类型的 MCP Server 调用"})
+        return json.dumps({"error": "当前仅支持 HTTP 类型的 MCP Server 调用"}, ensure_ascii=False)
 
     async with _open_session(server_id, server.url or "", server.auth_type or "none", auth_config, server.name) as session:
         result = await session.call_tool(tool_name, arguments)
@@ -254,7 +253,7 @@ async def call_tool_on_server(server_id: int, tool_name: str, arguments: dict) -
                 contents.append(str(item))
 
         if result.isError:
-            return json.dumps({"error": True, "content": contents})
+            return json.dumps({"error": True, "content": contents}, ensure_ascii=False)
         return "\n".join(contents) if contents else ""
 
 
@@ -287,31 +286,6 @@ async def connect_and_sync_tools(server_id: int) -> None:
         await server_manager.bulk_insert_tools(db, server_id, tools)
         await server_manager.update_server_status(db, server_id, "active")
         logger.info("Server %d 连接成功，获取到 %d 个工具", server_id, len(tools))
-
-        # 生成 embedding 并存储
-        try:
-            from backend.gateway.embedding import generate_embeddings_batch
-
-            texts = [f"{t['name']}: {t.get('description', '')}" for t in tools]
-            embeddings = generate_embeddings_batch(texts)
-
-            tool_rows = await (await db.execute(
-                "SELECT id, name FROM tools WHERE server_id = ? ORDER BY name",
-                (server_id,),
-            )).fetchall()
-
-            name_to_id = {r["name"]: r["id"] for r in tool_rows}
-            tool_embeddings = []
-            for t, emb in zip(tools, embeddings):
-                tid = name_to_id.get(t["name"])
-                if tid:
-                    tool_embeddings.append((tid, emb))
-
-            if tool_embeddings:
-                await server_manager.update_tool_embeddings(db, tool_embeddings)
-                logger.info("Server %d 的 %d 个工具 embedding 已生成", server_id, len(tool_embeddings))
-        except Exception:
-            logger.exception("生成 embedding 失败（不影响工具同步）")
 
     except Exception as e:
         logger.exception("连接 Server %d 失败", server_id)

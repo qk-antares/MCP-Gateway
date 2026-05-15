@@ -6,10 +6,11 @@ interface Props {
   selectedId: number | null
   onSelect: (id: number) => void
   onDelete: (id: number) => void
+  onToggle: (id: number) => void
   onAdd: () => void
 }
 
-export default function ServerList({ servers, selectedId, onSelect, onDelete, onAdd }: Props) {
+export default function ServerList({ servers, selectedId, onSelect, onDelete, onToggle, onAdd }: Props) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
@@ -35,6 +36,7 @@ export default function ServerList({ servers, selectedId, onSelect, onDelete, on
               selected={selectedId === s.id}
               onSelect={() => onSelect(s.id)}
               onDelete={() => onDelete(s.id)}
+              onToggle={() => onToggle(s.id)}
             />
           ))}
         </div>

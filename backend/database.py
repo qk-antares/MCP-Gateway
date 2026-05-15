@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS tools (
     name TEXT NOT NULL,
     description TEXT,
     input_schema TEXT,
-    embedding BLOB,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     FOREIGN KEY (server_id) REFERENCES mcp_servers(id) ON DELETE CASCADE,
     UNIQUE(server_id, name)

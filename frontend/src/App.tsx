@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import type { ServerInfo } from './types'
-import { fetchServers, createServer, deleteServer } from './api/client'
+import { fetchServers, createServer, deleteServer, toggleServer } from './api/client'
 import type { CreateServerRequest } from './types'
 import Layout from './components/Layout'
 import ServerList from './components/ServerList'
@@ -54,6 +54,11 @@ export default function App() {
     await loadServers()
   }
 
+  const handleToggle = async (id: number) => {
+    await toggleServer(id)
+    await loadServers()
+  }
+
   const handleDelete = async (id: number) => {
     if (!confirm('确认删除此 MCP Server？')) return
     await deleteServer(id)
@@ -78,6 +83,7 @@ export default function App() {
             selectedId={selectedId}
             onSelect={setSelectedId}
             onDelete={handleDelete}
+            onToggle={handleToggle}
             onAdd={() => setShowModal(true)}
           />
         </div>

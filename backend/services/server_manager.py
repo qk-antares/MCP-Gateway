@@ -111,21 +111,6 @@ async def list_all_tools_with_server(db: aiosqlite.Connection) -> list[dict]:
     ]
 
 
-async def list_all_tools_with_embeddings(db: aiosqlite.Connection) -> list[tuple]:
-    rows = await (
-        await db.execute(
-            """
-            SELECT t.id, t.name, t.description, s.name AS server_name, t.embedding
-            FROM tools t
-            JOIN mcp_servers s ON s.id = t.server_id
-            WHERE s.status = 'active'
-            ORDER BY s.name, t.name
-            """
-        )
-    ).fetchall()
-    return [(row["id"], row["name"], row["description"], row["server_name"], row["embedding"]) for row in rows]
-
-
 async def get_tool_with_schema(
     db: aiosqlite.Connection, server_name: str, tool_name: str
 ) -> dict | None:
@@ -160,17 +145,6 @@ async def get_server_by_name(db: aiosqlite.Connection, name: str) -> ServerInfo 
         await db.execute("SELECT COUNT(*) AS cnt FROM tools WHERE server_id = ?", (row["id"],))
     ).fetchone()
     return _row_to_server_info(row, tool_count_row["cnt"])
-
-
-async def update_tool_embeddings(
-    db: aiosqlite.Connection,
-    tool_embeddings: list[tuple[int, bytes]],
-) -> None:
-    await db.executemany(
-        "UPDATE tools SET embedding = ? WHERE id = ?",
-        [(emb, tid) for tid, emb in tool_embeddings],
-    )
-    await db.commit()
 
 
 def _row_to_server_info(row: aiosqlite.Row, tool_count: int) -> ServerInfo:

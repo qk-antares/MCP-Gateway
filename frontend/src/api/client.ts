@@ -36,6 +36,10 @@ export async function fetchServerTools(serverId: number): Promise<ToolInfo[]> {
   return data.tools
 }
 
+export async function toggleServer(id: number): Promise<void> {
+  await request(`/servers/${id}/toggle`, { method: 'PATCH' })
+}
+
 export async function fetchOAuthUrl(serverId: number): Promise<string | null> {
   const data = await request<{ oauth_url: string | null }>(`/servers/${serverId}/oauth-url`)
   return data.oauth_url

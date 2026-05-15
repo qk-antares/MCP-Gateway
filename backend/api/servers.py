@@ -1,7 +1,7 @@
 import asyncio
 
 from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 
 from backend.database import get_db
 from backend.models.schemas import (
@@ -52,6 +52,22 @@ async def delete_server(server_id: int):
     return {"ok": True}
 
 
+@router.patch("/servers/{server_id}/toggle")
+async def toggle_server(server_id: int):
+    db = await get_db()
+    server = await server_manager.get_server(db, server_id)
+    if not server:
+        raise HTTPException(status_code=404, detail="Server 不存在")
+
+    if server.status == "disabled":
+        await server_manager.update_server_status(db, server_id, "pending")
+        asyncio.create_task(connect_and_sync_tools(server_id))
+        return {"ok": True, "status": "pending"}
+    else:
+        await server_manager.update_server_status(db, server_id, "disabled")
+        return {"ok": True, "status": "disabled"}
+
+
 @router.get("/servers/{server_id}/tools", response_model=ToolListResponse)
 async def list_server_tools(server_id: int):
     db = await get_db()
@@ -60,6 +76,28 @@ async def list_server_tools(server_id: int):
         raise HTTPException(status_code=404, detail="Server 不存在")
     tools = await server_manager.list_tools_by_server(db, server_id)
     return ToolListResponse(tools=tools)
+
+
+@router.get("/tools/summary", response_class=PlainTextResponse)
+async def tools_summary():
+    db = await get_db()
+    tools = await server_manager.list_all_tools_with_server(db)
+    if not tools:
+        return ""
+
+    grouped: dict[str, list[dict]] = {}
+    for t in tools:
+        grouped.setdefault(t["server_name"], []).append(t)
+
+    lines = []
+    for server_name, server_tools in grouped.items():
+        lines.append(f"[{server_name}]")
+        for t in server_tools:
+            desc = " ".join((t["description"] or "").split())
+            if len(desc) > 80:
+                desc = desc[:77] + "..."
+            lines.append(f"  {t['tool_name']}: {desc}")
+    return "\n".join(lines)
 
 
 @router.get("/servers/{server_id}/oauth-url")

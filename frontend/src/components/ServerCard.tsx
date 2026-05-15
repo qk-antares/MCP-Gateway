@@ -6,12 +6,14 @@ const STATUS_STYLES: Record<string, string> = {
   active: 'bg-green-100 text-green-800',
   pending: 'bg-yellow-100 text-yellow-800',
   error: 'bg-red-100 text-red-800',
+  disabled: 'bg-gray-100 text-gray-500',
 }
 
 const STATUS_LABELS: Record<string, string> = {
   active: '已连接',
   pending: '连接中',
   error: '错误',
+  disabled: '已停用',
 }
 
 interface Props {
@@ -19,9 +21,10 @@ interface Props {
   selected: boolean
   onSelect: () => void
   onDelete: () => void
+  onToggle: () => void
 }
 
-export default function ServerCard({ server, selected, onSelect, onDelete }: Props) {
+export default function ServerCard({ server, selected, onSelect, onDelete, onToggle }: Props) {
   const [oauthLoading, setOauthLoading] = useState(false)
 
   const handleOAuthClick = async (e: React.MouseEvent) => {
@@ -41,7 +44,11 @@ export default function ServerCard({ server, selected, onSelect, onDelete }: Pro
     <div
       onClick={onSelect}
       className={`p-4 rounded-lg border cursor-pointer transition-all ${
-        selected ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-gray-200 bg-white hover:border-gray-300'
+        server.status === 'disabled'
+          ? 'border-gray-200 bg-gray-50 opacity-60'
+          : selected
+            ? 'border-blue-500 bg-blue-50 shadow-sm'
+            : 'border-gray-200 bg-white hover:border-gray-300'
       }`}
     >
       <div className="flex items-start justify-between">
@@ -60,18 +67,42 @@ export default function ServerCard({ server, selected, onSelect, onDelete }: Pro
           </p>
           <p className="text-xs text-gray-500 mt-1">{server.tool_count} 个工具</p>
         </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            onDelete()
-          }}
-          className="ml-2 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
-          title="删除"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-        </button>
+        <div className="flex items-center ml-2 gap-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              onToggle()
+            }}
+            className={`p-1.5 rounded transition-colors ${
+              server.status === 'disabled'
+                ? 'text-gray-400 hover:text-green-600 hover:bg-green-50'
+                : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
+            }`}
+            title={server.status === 'disabled' ? '启用' : '停用'}
+          >
+            {server.status === 'disabled' ? (
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            )}
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              onDelete()
+            }}
+            className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+            title="删除"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
       </div>
       {server.status === 'pending' && server.auth_type === 'oauth' && (
         <button
