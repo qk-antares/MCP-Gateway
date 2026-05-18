@@ -1,7 +1,6 @@
 import contextlib
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.routing import Mount
 
@@ -10,9 +9,10 @@ from backend.config import PROJECT_ROOT
 from backend.database import close_db, init_db
 from backend.gateway import gateway_mcp
 
-STATIC_DIR = PROJECT_ROOT / "frontend" / "dist"
+STATIC_DIR = PROJECT_ROOT / "frontend"
 
 mcp_app = gateway_mcp.streamable_http_app()
+
 
 @contextlib.asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -23,14 +23,6 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(title="MCP Gateway", description="MCP Server Gateway 网关", lifespan=lifespan)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 app.include_router(servers_router)
 
