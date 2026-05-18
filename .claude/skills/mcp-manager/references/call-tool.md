@@ -26,8 +26,10 @@ mcp2cli @<server-name> <tool-name> --help
 ### 第三步：执行调用
 
 ```bash
-mcp2cli @<server-name> <tool-name> --param1 value1 --param2 value2
+mcp2cli @<server-name> <tool-name> --param1 value1 --param2 value2 | jq .
 ```
+
+始终管道到 `jq .` 以确保中文等非 ASCII 字符正确显示（mcp2cli 输出的 JSON 默认使用 `\uXXXX` 转义）。
 
 注意事项：
 - 对于可能返回大量数据的调用，使用 `--head N` 限制返回条数
@@ -41,5 +43,5 @@ mcp2cli @<server-name> <tool-name> --param1 value1 --param2 value2
 mcp2cli @coop query_workitem_detail --help
 
 # 调用工具
-mcp2cli @coop query_workitem_detail --id 12345
+mcp2cli @coop query_workitem_detail --id 12345 | jq .
 ```

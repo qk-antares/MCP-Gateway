@@ -13,7 +13,7 @@ if [ $# -lt 1 ]; then
 fi
 
 PROJECT_ROOT="$1"
-CLAUDE_MD="$PROJECT_ROOT/CLAUDE.md"
+CLAUDE_MD="$PROJECT_ROOT/.claude/CLAUDE.md"
 
 # 获取所有 baked server 名称（每行一个）
 get_baked_servers() {
