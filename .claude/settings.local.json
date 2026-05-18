@@ -11,7 +11,8 @@
       "mcp__gateway__invoke_tool",
       "Bash(mcp2cli bake *)",
       "Bash(python3 *)",
-      "Bash(mcp2cli @code *)"
+      "Bash(mcp2cli @code *)",
+      "Bash(mcp2cli @aone-km *)"
     ]
   },
   "enableAllProjectMcpServers": true,

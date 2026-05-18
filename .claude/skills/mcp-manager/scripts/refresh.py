@@ -8,8 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-START = "<!-- MCP_GATEWAY_TOOLS_START -->"
-END = "<!-- MCP_GATEWAY_TOOLS_END -->"
+START = "<!-- MCP_MANAGER_TOOLS_START -->"
+END = "<!-- MCP_MANAGER_TOOLS_END -->"
 
 
 def run(cmd: list[str], timeout: int = 30) -> str:
@@ -38,19 +38,20 @@ def get_baked_servers() -> list[str]:
 
 
 def get_server_tools(name: str) -> list[tuple[str, str]]:
-    """解析 mcp2cli @name --list 输出，提取 (tool_name, description) 列表。"""
+    """解析 mcp2cli @name --list 输出，提取 (tool_name, description) 列表。
+
+    工具行格式：以空格开头，工具名（小写字母/数字/连字符/下划线）后跟多个空格再跟描述。
+    Return schema 等非工具行的首个单词含引号或大括号等字符，不符合工具名格式。
+    """
     output = run(["mcp2cli", f"@{name}", "--list"], timeout=60)
     tools = []
     for line in output.splitlines():
         if not line.startswith("  "):
             continue
-        line = line.strip()
-        match = re.match(r"^(\S+)\s+(.*)", line)
+        match = re.match(r"^  ([a-z][a-z0-9_-]*)\s{2,}(.+)", line)
         if match:
             tool_name = match.group(1)
             desc = match.group(2).strip()
-            if len(desc) > 80:
-                desc = desc[:77] + "..."
             tools.append((tool_name, desc))
     return tools
 
@@ -69,7 +70,7 @@ def build_summary(servers: list[str]) -> str:
 
 def update_claude_md(claude_md: Path, summary: str) -> None:
     if summary.strip():
-        block = f"{START}\n\n## MCP Gateway 可用工具\n\n{summary}\n\n{END}"
+        block = f"{START}\n\n## MCP Manager 可用工具\n\n{summary}\n\n{END}"
     else:
         block = f"{START}\n\n暂无已连接的 MCP Server。\n\n{END}"
 

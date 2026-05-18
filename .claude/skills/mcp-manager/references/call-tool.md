@@ -6,20 +6,14 @@
 
 ### 第一步：确定目标
 
-CLAUDE.md 中 `<!-- MCP_GATEWAY_TOOLS_START -->` 和 `<!-- MCP_GATEWAY_TOOLS_END -->` 之间列出了所有已连接 Server 的工具摘要（name + description），格式为：
+CLAUDE.md 中 `<!-- MCP_MANAGER_TOOLS_START -->` 和 `<!-- MCP_MANAGER_TOOLS_END -->` 之间列出了所有已连接 MCP Server 的工具摘要（name + description），格式为：
 
 ```
 [server-name]
   tool-name: 工具描述
 ```
 
-先查看 CLAUDE.md 中的摘要，确定目标 server-name 和 tool-name。
-
-也可以用搜索缩小范围：
-
-```bash
-mcp2cli @<server-name> --search "<关键词>"
-```
+先根据 CLAUDE.md 中的摘要，确定目标 server-name 和 tool-name。
 
 ### 第二步：获取工具参数详情
 
@@ -43,15 +37,9 @@ mcp2cli @<server-name> <tool-name> --param1 value1 --param2 value2
 ### 示例
 
 ```bash
-# 搜索工作项相关的工具
-mcp2cli @coop --search "workitem"
-
 # 查看 "查询工作项详情" 工具的参数
 mcp2cli @coop query_workitem_detail --help
 
 # 调用工具
-mcp2cli @coop query_workitem_detail --id 12345 --pretty
-
-# 搜索代码
-mcp2cli @code search_code --query "authentication" --repo "foo/bar" --head 5
+mcp2cli @coop query_workitem_detail --id 12345
 ```
