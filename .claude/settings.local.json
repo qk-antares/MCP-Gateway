@@ -8,7 +8,10 @@
       "Edit *",
       "Bash *",
       "mcp__gateway__get_tool_schema",
-      "mcp__gateway__invoke_tool"
+      "mcp__gateway__invoke_tool",
+      "Bash(mcp2cli bake *)",
+      "Bash(python3 *)",
+      "Bash(mcp2cli @code *)"
     ]
   },
   "enableAllProjectMcpServers": true,
