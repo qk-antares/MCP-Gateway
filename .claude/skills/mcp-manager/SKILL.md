@@ -29,21 +29,7 @@ pip install mcp2cli
 
 | 意图 | 操作 | 参考文档 |
 |------|------|----------|
+| 查看已连接的 MCP Server / 查看工具列表 | bake list / @name --list | 阅读 `references/list-servers.md` |
 | 添加/连接新的 MCP Server | bake create + 刷新摘要 | 阅读 `references/add-server.md` |
 | 移除/删除 MCP Server | bake remove + 刷新摘要 | 阅读 `references/remove-server.md` |
 | 查看工具参数 / 调用工具 | @name tool --help / @name tool --params | 阅读 `references/call-tool.md` |
-
-## 查看当前已连接的 MCP Server
-
-```bash
-mcp2cli bake list
-```
-
-CLAUDE.md 中 `<!-- MCP_GATEWAY_TOOLS_START -->` 和 `<!-- MCP_GATEWAY_TOOLS_END -->` 之间列出了所有已连接 Server 的工具摘要（name + description），格式为：
-
-```
-[server-name]
-  tool-name: 工具描述
-```
-
-在调用工具前，先查看 CLAUDE.md 中的摘要确定目标 server-name 和 tool-name。

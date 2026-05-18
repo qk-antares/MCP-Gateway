@@ -33,7 +33,6 @@ MCP Server Gateway提供两个元工具：
 1. get_tool_schema(server_name, tool_name)：获取指定工具的完整调用参数schema
 2. invoke_tool(server_name, tool_name, arguments)：调用指定工具并返回结果
 
-所有工具的摘要通过 `/refresh-mcp` skill 手动刷新写入本文件末尾，供 Claude 感知 Gateway 托管的工具。
 
 <!-- MCP_GATEWAY_TOOLS_START -->
 

@@ -6,7 +6,14 @@
 
 ### 第一步：确定目标
 
-查看 CLAUDE.md 中 `<!-- MCP_GATEWAY_TOOLS_START -->` 区域内的工具摘要，找到目标 server-name 和 tool-name。
+CLAUDE.md 中 `<!-- MCP_GATEWAY_TOOLS_START -->` 和 `<!-- MCP_GATEWAY_TOOLS_END -->` 之间列出了所有已连接 Server 的工具摘要（name + description），格式为：
+
+```
+[server-name]
+  tool-name: 工具描述
+```
+
+先查看 CLAUDE.md 中的摘要，确定目标 server-name 和 tool-name。
 
 也可以用搜索缩小范围：
 
