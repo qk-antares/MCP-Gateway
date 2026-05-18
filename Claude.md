@@ -32,12 +32,14 @@
 MCP Server Gateway提供两个元工具：
 1. get_tool_schema(server_name, tool_name)：获取指定工具的完整调用参数schema
 2. invoke_tool(server_name, tool_name, arguments)：调用指定工具并返回结果
-
 <!-- MCP_MANAGER_TOOLS_START -->
 
-## MCP Manager 可用工具
+# MCP Manager 可用工具
+
+你可以通过mcp-manager Skill调用以下外部工具:
 
 [aone-km]
+  fetch-external-content-by-url: 通过钉钉或者语雀文档链接获取文档内容，如果获取不到内容，请检查知识库是否完成授权，如果知识库未完成授权，请访问链接进行授权检测
   search-code-wiki: 在 CodeWiki 中进行语义搜索，支持跨多个代码仓库搜索。返回按相关性排序的搜索结果。
   get-code-wiki-page-content: 获取 CodeWiki 指定页面的完整内容。返回页面标题、Markdown 内容和元数据信息。
   get-code-wiki-structure: 获取代码仓库的 CodeWiki 目录结构。默认仅返回当前层级，必要时可递归返回目录树。
@@ -47,7 +49,6 @@ MCP Server Gateway提供两个元工具：
   ask-dev-ops-knowledge: 通过自然语言提问关于阿里巴巴集团内中间件、研发运维平台相关问题，可以回答使用方法、功能介绍、接入方式、SDK代码片段、问题排查思路等
   search-dev-ops-knowledge: 通过自然语言提问关于阿里巴巴集团内中间件、研发运维平台相关问题，可以查询到使用方法、功能介绍、接入方式、SDK代码片段、问题排查思路等
   chat-with-knowledge-base: 基于知识库的智能问答，通过 ReAct 模式进行多轮推理和文档检索，返回带有文档引用的完整回答。适用于需要深度理解和多步推理的复杂问题。
-  fetch-external-content-by-url: 通过钉钉或者语雀文档链接获取文档内容，如果获取不到内容，请检查知识库是否完成授权，如果知识库未完成授权，请访问链接进行授权检测
   fetch-knowledge-directory-by-url: 通过钉钉或者语雀知识库链接获取知识库的目录列表，如果获取不到内容，请检查知识库是否完成授权，如果知识库未完成授权，请访问链接进行授权检测
   get-knowledge-group-structure: 根据知识组 ID 获取知识组的结构信息，包括基础信息（名称、描述等）、直属子知识组列表和知识库列表。用于了解一个知识组的整体组织结构。
   upload-doc-to-kb-repo: 上传 Markdown 文档到平台知识库，支持指定目录路径或父节点。若指定 pageId 则更新已有文档

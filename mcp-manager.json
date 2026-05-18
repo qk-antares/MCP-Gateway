@@ -1,0 +1,19 @@
+{
+  "servers": {
+    "aone-km": {
+      "type": "http",
+      "url": "https://mcp.alibaba-inc.com/aone-km/mcp",
+      "auth": "oauth"
+    },
+    "aone-mix": {
+      "type": "http",
+      "url": "https://mcp.alibaba-inc.com/aone-mix/mcp",
+      "auth": "oauth"
+    },
+    "code": {
+      "type": "http",
+      "url": "https://mcp.alibaba-inc.com/code/mcp",
+      "auth": "oauth"
+    }
+  }
+}

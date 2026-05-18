@@ -18,7 +18,7 @@ mcp2cli --version
 如果未安装，执行安装：
 
 ```bash
-uvx mcp2cli --help
+uv tool install mcp2cli
 # 或
 pip install mcp2cli
 ```
@@ -29,6 +29,7 @@ pip install mcp2cli
 
 | 意图 | 操作 | 参考文档 |
 |------|------|----------|
+| 同步 MCP Server | sync.sh（对齐 mcp-manager.json + 刷新 CLAUDE.md） | 阅读 `references/sync-servers.md` |
 | 查看已连接的 MCP Server / 查看工具列表 | bake list / @name --list | 阅读 `references/list-servers.md` |
 | 添加/连接新的 MCP Server | bake create + 刷新摘要 | 阅读 `references/add-server.md` |
 | 移除/删除 MCP Server | bake remove + 刷新摘要 | 阅读 `references/remove-server.md` |

@@ -53,10 +53,33 @@ mcp2cli @<name> --list
 
 确认能看到工具列表。如果连接失败，检查 URL、认证信息是否正确。
 
-### 4. 刷新工具摘要到 CLAUDE.md
+### 4. 更新 mcp-manager.json
+
+将新 Server 信息写入项目配置文件，确保下次 Session 启动时自动同步：
+
+**HTTP 类型**：
+```bash
+jq --arg name "<name>" --argjson entry '{"type":"http","url":"<url>","auth":"<auth>"}' \
+  '.servers[$name] = $entry' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
+  && mv /tmp/mcp-manager.tmp $PROJECT_ROOT/mcp-manager.json
+```
+
+**stdio 类型**：
+```bash
+jq --arg name "<name>" --argjson entry '{"type":"stdio","command":"<command>","auth":"none"}' \
+  '.servers[$name] = $entry' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
+  && mv /tmp/mcp-manager.tmp $PROJECT_ROOT/mcp-manager.json
+```
+
+如果 `mcp-manager.json` 不存在，先创建：
+```bash
+echo '{"servers":{}}' > $PROJECT_ROOT/mcp-manager.json
+```
+
+### 5. 刷新工具摘要到 CLAUDE.md
 
 ```bash
-python3 <SKILL_DIR>/scripts/refresh.py $PROJECT_ROOT
+sh <SKILL_DIR>/scripts/refresh.sh $PROJECT_ROOT
 ```
 
 其中 `<SKILL_DIR>` 是此 skill 所在的目录（根据 SKILL.md 的加载路径推导）。

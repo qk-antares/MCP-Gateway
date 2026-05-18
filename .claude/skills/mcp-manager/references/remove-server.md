@@ -18,10 +18,19 @@ mcp2cli bake list
 mcp2cli bake remove <name>
 ```
 
-### 3. 刷新工具摘要到 CLAUDE.md
+### 3. 更新 mcp-manager.json
+
+从项目配置文件中移除该 Server：
 
 ```bash
-python3 <SKILL_DIR>/scripts/refresh.py $PROJECT_ROOT
+jq --arg name "<name>" 'del(.servers[$name])' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
+  && mv /tmp/mcp-manager.tmp $PROJECT_ROOT/mcp-manager.json
+```
+
+### 4. 刷新工具摘要到 CLAUDE.md
+
+```bash
+sh <SKILL_DIR>/scripts/refresh.sh $PROJECT_ROOT
 ```
 
 其中 `<SKILL_DIR>` 是此 skill 所在的目录（根据 SKILL.md 的加载路径推导）。
