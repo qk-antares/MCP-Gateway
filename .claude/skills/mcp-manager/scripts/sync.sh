@@ -35,7 +35,7 @@ fi
 
 # 从 mcp-manager.json 获取声明的 server 列表（文件不存在则为空）
 if [ -f "$CONFIG" ]; then
-  declared=$(jq -r '.servers | keys[]' "$CONFIG" 2>/dev/null | sort)
+  declared=$(jq -r '.mcpServers | keys[]' "$CONFIG" 2>/dev/null | sort)
 else
   declared=""
 fi
@@ -69,23 +69,23 @@ fi
 # 执行 bake create
 for name in $to_add; do
   [ -z "$name" ] && continue
-  type=$(jq -r --arg n "$name" '.servers[$n].type // "http"' "$CONFIG")
-  auth=$(jq -r --arg n "$name" '.servers[$n].auth // "none"' "$CONFIG")
+  type=$(jq -r --arg n "$name" '.mcpServers[$n].type // "http"' "$CONFIG")
+  auth=$(jq -r --arg n "$name" '.mcpServers[$n].auth // "none"' "$CONFIG")
 
   if [ "$type" = "stdio" ]; then
-    cmd=$(jq -r --arg n "$name" '.servers[$n].command // ""' "$CONFIG")
+    cmd=$(jq -r --arg n "$name" '.mcpServers[$n].command // ""' "$CONFIG")
     if [ -z "$cmd" ]; then
       echo "[sync] 跳过 $name: stdio 类型缺少 command"
       continue
     fi
     create_cmd="mcp2cli bake create $name --mcp-stdio \"$cmd\""
     # 添加环境变量
-    env_vars=$(jq -r --arg n "$name" '.servers[$n].env // {} | to_entries[] | "\(.key)=\(.value)"' "$CONFIG" 2>/dev/null)
+    env_vars=$(jq -r --arg n "$name" '.mcpServers[$n].env // {} | to_entries[] | "\(.key)=\(.value)"' "$CONFIG" 2>/dev/null)
     for ev in $env_vars; do
       create_cmd="$create_cmd --env $ev"
     done
   else
-    url=$(jq -r --arg n "$name" '.servers[$n].url // ""' "$CONFIG")
+    url=$(jq -r --arg n "$name" '.mcpServers[$n].url // ""' "$CONFIG")
     if [ -z "$url" ]; then
       echo "[sync] 跳过 $name: http 类型缺少 url"
       continue
@@ -98,7 +98,7 @@ for name in $to_add; do
       create_cmd="$create_cmd --oauth"
       ;;
     bearer|apikey)
-      auth_header=$(jq -r --arg n "$name" '.servers[$n].auth_header // ""' "$CONFIG")
+      auth_header=$(jq -r --arg n "$name" '.mcpServers[$n].auth_header // ""' "$CONFIG")
       if [ -n "$auth_header" ]; then
         create_cmd="$create_cmd --auth-header \"$auth_header\""
       fi

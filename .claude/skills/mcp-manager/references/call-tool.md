@@ -6,14 +6,14 @@
 
 ### 第一步：确定目标
 
-CLAUDE.md 中 `<!-- MCP_MANAGER_TOOLS_START -->` 和 `<!-- MCP_MANAGER_TOOLS_END -->` 之间列出了所有已连接 MCP Server 的工具摘要（name + description），格式为：
+.claude/CLAUDE.md 中 `<!-- MCP_MANAGER_TOOLS_START -->` 和 `<!-- MCP_MANAGER_TOOLS_END -->` 之间列出了所有已连接 MCP Server 的工具摘要，格式为：
 
 ```
 [server-name]
   tool-name: 工具描述
 ```
 
-先根据 CLAUDE.md 中的摘要，确定目标 server-name 和 tool-name。
+先根据工具摘要确定目标 server-name 和 tool-name。
 
 ### 第二步：获取工具参数详情
 
@@ -32,7 +32,6 @@ mcp2cli @<server-name> <tool-name> --param1 value1 --param2 value2 | jq .
 始终管道到 `jq .` 以确保中文等非 ASCII 字符正确显示（mcp2cli 输出的 JSON 默认使用 `\uXXXX` 转义）。
 
 注意事项：
-- 对于可能返回大量数据的调用，使用 `--head N` 限制返回条数
 - 字符串参数值如果包含空格，需要用引号包裹
 - JSON 类型的参数，传入 JSON 字符串：`--complex-param '{"key": "value"}'`
 

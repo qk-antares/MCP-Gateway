@@ -23,11 +23,11 @@ mcp2cli bake remove <name>
 从项目配置文件中移除该 Server：
 
 ```bash
-jq --arg name "<name>" 'del(.servers[$name])' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
+jq --arg name "<name>" 'del(.mcpServers[$name])' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
   && mv /tmp/mcp-manager.tmp $PROJECT_ROOT/mcp-manager.json
 ```
 
-### 4. 刷新工具摘要到 CLAUDE.md
+### 4. 刷新工具摘要到 .claude/CLAUDE.md
 
 ```bash
 sh <SKILL_DIR>/scripts/refresh.sh $PROJECT_ROOT

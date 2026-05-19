@@ -60,28 +60,26 @@ mcp2cli @<name> --list
 **HTTP 类型**：
 ```bash
 jq --arg name "<name>" --argjson entry '{"type":"http","url":"<url>","auth":"<auth>"}' \
-  '.servers[$name] = $entry' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
+  '.mcpServers[$name] = $entry' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
   && mv /tmp/mcp-manager.tmp $PROJECT_ROOT/mcp-manager.json
 ```
 
 **stdio 类型**：
 ```bash
 jq --arg name "<name>" --argjson entry '{"type":"stdio","command":"<command>","auth":"none"}' \
-  '.servers[$name] = $entry' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
+  '.mcpServers[$name] = $entry' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
   && mv /tmp/mcp-manager.tmp $PROJECT_ROOT/mcp-manager.json
 ```
 
 如果 `mcp-manager.json` 不存在，先创建：
 ```bash
-echo '{"servers":{}}' > $PROJECT_ROOT/mcp-manager.json
+echo '{"mcpServers":{}}' > $PROJECT_ROOT/mcp-manager.json
 ```
 
-### 5. 刷新工具摘要到 CLAUDE.md
+### 5. 刷新工具摘要到 .claude/CLAUDE.md
 
 ```bash
 sh <SKILL_DIR>/scripts/refresh.sh $PROJECT_ROOT
 ```
 
 其中 `<SKILL_DIR>` 是此 skill 所在的目录（根据 SKILL.md 的加载路径推导）。
-
-刷新后检查 CLAUDE.md 末尾是否包含新添加 Server 的工具信息。
