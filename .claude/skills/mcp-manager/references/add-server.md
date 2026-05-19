@@ -8,6 +8,9 @@
 - **名称**：为这个 Server 起一个简短的名称（用于 `mcp2cli @name` 引用）
 - **协议类型**：HTTP（`--mcp <url>`）还是 stdio（`--mcp-stdio "<command>"`）
 - **认证方式**：无认证 / Bearer Token / API Key / OAuth
+- **级别**：项目级（默认）还是用户级：
+  - **项目级**（默认）：写入 `$PROJECT_ROOT/mcp-manager.json`，仅当前项目生效
+  - **用户级**：写入 `~/.mcp-config.json`，对所有项目生效。用户表达"全局/用户级/global/-g/--global/所有项目通用"等意图时，视为用户级。未明确指定时默认项目级。
 
 ### 2. 执行 bake create
 
@@ -53,27 +56,29 @@ mcp2cli @<name> --list
 
 确认能看到工具列表。如果连接失败，检查 URL、认证信息是否正确。
 
-### 4. 更新 mcp-manager.json
+### 4. 更新配置文件
 
-将新 Server 信息写入项目配置文件，确保下次 Session 启动时自动同步：
+根据级别选择目标文件：
+
+```bash
+# 项目级（默认）
+TARGET="$PROJECT_ROOT/mcp-manager.json"
+# 用户级（-g）
+TARGET="~/.mcp-config.json"
+```
 
 **HTTP 类型**：
 ```bash
-jq --arg name "<name>" --argjson entry '{"type":"http","url":"<url>","auth":"<auth>"}' \
-  '.mcpServers[$name] = $entry' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
-  && mv /tmp/mcp-manager.tmp $PROJECT_ROOT/mcp-manager.json
+(cat "$TARGET" 2>/dev/null || echo '{"mcpServers":{}}') | \
+  jq --arg name "<name>" --argjson entry '{"type":"http","url":"<url>","auth":"<auth>"}' \
+  '.mcpServers[$name] = $entry' > /tmp/mcp-manager.tmp && mv /tmp/mcp-manager.tmp "$TARGET"
 ```
 
 **stdio 类型**：
 ```bash
-jq --arg name "<name>" --argjson entry '{"type":"stdio","command":"<command>","auth":"none"}' \
-  '.mcpServers[$name] = $entry' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
-  && mv /tmp/mcp-manager.tmp $PROJECT_ROOT/mcp-manager.json
-```
-
-如果 `mcp-manager.json` 不存在，先创建：
-```bash
-echo '{"mcpServers":{}}' > $PROJECT_ROOT/mcp-manager.json
+(cat "$TARGET" 2>/dev/null || echo '{"mcpServers":{}}') | \
+  jq --arg name "<name>" --argjson entry '{"type":"stdio","command":"<command>","auth":"none"}' \
+  '.mcpServers[$name] = $entry' > /tmp/mcp-manager.tmp && mv /tmp/mcp-manager.tmp "$TARGET"
 ```
 
 ### 5. 刷新工具摘要到 .claude/CLAUDE.md

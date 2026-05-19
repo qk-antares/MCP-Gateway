@@ -10,7 +10,7 @@
 mcp2cli bake list
 ```
 
-向用户确认要移除的 Server 名称。
+确认要移除的 Server 名称。
 
 ### 2. 执行 bake remove
 
@@ -18,13 +18,22 @@ mcp2cli bake list
 mcp2cli bake remove <name>
 ```
 
-### 3. 更新 mcp-manager.json
+### 3. 从配置文件中删除
 
-从项目配置文件中移除该 Server：
+同时从项目级和用户级配置中删除该 Server（若存在）：
 
 ```bash
-jq --arg name "<name>" 'del(.mcpServers[$name])' $PROJECT_ROOT/mcp-manager.json > /tmp/mcp-manager.tmp \
-  && mv /tmp/mcp-manager.tmp $PROJECT_ROOT/mcp-manager.json
+# 项目级
+if [ -f "$PROJECT_ROOT/mcp-manager.json" ]; then
+  jq --arg name "<name>" 'del(.mcpServers[$name])' "$PROJECT_ROOT/mcp-manager.json" > /tmp/mcp-manager.tmp \
+    && mv /tmp/mcp-manager.tmp "$PROJECT_ROOT/mcp-manager.json"
+fi
+
+# 用户级
+if [ -f "$HOME/.mcp-config.json" ]; then
+  jq --arg name "<name>" 'del(.mcpServers[$name])' "$HOME/.mcp-config.json" > /tmp/mcp-config.tmp \
+    && mv /tmp/mcp-config.tmp "$HOME/.mcp-config.json"
+fi
 ```
 
 ### 4. 刷新工具摘要到 .claude/CLAUDE.md
@@ -34,5 +43,3 @@ sh <SKILL_DIR>/scripts/refresh.sh $PROJECT_ROOT
 ```
 
 其中 `<SKILL_DIR>` 是此 skill 所在的目录（根据 SKILL.md 的加载路径推导）。
-
-刷新后该 Server 的工具将从 CLAUDE.md 中移除。

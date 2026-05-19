@@ -7,20 +7,11 @@
       "Write *",
       "Edit *",
       "Bash *",
-      "mcp__gateway__get_tool_schema",
-      "mcp__gateway__invoke_tool",
-      "Bash(mcp2cli bake *)",
-      "Bash(python3 *)",
-      "Bash(mcp2cli @code *)",
-      "Bash(mcp2cli @aone-km *)",
+      "Bash(mcp2cli *)",
       "Bash(sh *)",
       "Bash(chmod +x *)"
     ]
   },
-  "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "gateway"
-  ],
   "hooks": {
     "SessionStart": [
       {
@@ -28,11 +19,11 @@
           {
             "type": "command",
             "command": "bash -c 'test -f .claude/skills/mcp-manager/scripts/sync.sh && sh .claude/skills/mcp-manager/scripts/sync.sh . || true'",
-            "timeout": 30,
-            "statusMessage": "[mcp-manager] 同步MCP Server..."
+            "timeout": 60
           }
         ]
       }
     ]
-  }
+  },
+  "allowedMcpServers": []
 }
