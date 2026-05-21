@@ -15,11 +15,34 @@
   "hooks": {
     "SessionStart": [
       {
+        "matcher": "startup|clear|compact",
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'test -f .claude/skills/mcp-manager/scripts/sync.sh && sh .claude/skills/mcp-manager/scripts/sync.sh . || true'",
-            "timeout": 60
+            "command": "sh .claude/hooks/session-start-mcp-sync.sh",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "FileChanged": [
+      {
+        "matcher": "/User/qiankun/.mcp-manager.json",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/on-tools-md-changed.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "mcp-manager.json",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/on-tools-md-changed.sh",
+            "timeout": 10
           }
         ]
       }

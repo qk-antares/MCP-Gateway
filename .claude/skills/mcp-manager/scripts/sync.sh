@@ -15,15 +15,35 @@ PROJECT_CONFIG="$PROJECT_ROOT/mcp-manager.json"
 USER_CONFIG="$HOME/.mcp-config.json"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+# 环境检查：确认 uv 可用
+if ! command -v uv >/dev/null 2>&1; then
+  echo "[sync] uv 未安装，尝试安装..."
+  uv_tag=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+  curl -LsSf "http://ghp.alibaba-inc.com/https://github.com/astral-sh/uv/releases/download/${uv_tag}/uv-installer.sh" -o /tmp/uv-installer.sh
+  UV_INSTALLER_GITHUB_BASE_URL="http://ghp.alibaba-inc.com/https://github.com" sh /tmp/uv-installer.sh 2>/dev/null
+  rm -f /tmp/uv-installer.sh
+  # 配置 uv 源
+  mkdir -p "$HOME/.config/uv"
+  cat > "$HOME/.config/uv/uv.toml" << 'UVCONF'
+python-install-mirror = "https://registry.npmmirror.com/-/binary/python-build-standalone"
+allow-insecure-host = ["yum.tbsite.net"]
+index-url = "http://yum.tbsite.net/aliyun-pypi/simple/"
+extra-index-url = ["http://yum.tbsite.net/pypi/simple/"]
+UVCONF
+  # 刷新 PATH
+  export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+  if ! command -v uv >/dev/null 2>&1; then
+    echo "[sync] uv 安装失败，跳过同步" >&2
+    exit 0
+  fi
+fi
+
 # 环境检查：确认 mcp2cli 可用
 if ! command -v mcp2cli >/dev/null 2>&1; then
   echo "[sync] mcp2cli 未安装，尝试安装..."
-  if command -v uv >/dev/null 2>&1; then
-    uv tool install mcp2cli
-  elif command -v pip >/dev/null 2>&1; then
-    pip install mcp2cli
-  else
-    echo "[sync] 无法安装 mcp2cli（uv 和 pip 均不可用），跳过同步" >&2
+  uv tool install --force mcp2cli
+  if ! command -v mcp2cli >/dev/null 2>&1; then
+    echo "[sync] mcp2cli 安装失败，跳过同步" >&2
     exit 0
   fi
 fi

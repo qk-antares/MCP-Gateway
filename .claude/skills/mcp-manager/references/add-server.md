@@ -80,11 +80,3 @@ TARGET="~/.mcp-config.json"
   jq --arg name "<name>" --argjson entry '{"type":"stdio","command":"<command>","auth":"none"}' \
   '.mcpServers[$name] = $entry' > /tmp/mcp-manager.tmp && mv /tmp/mcp-manager.tmp "$TARGET"
 ```
-
-### 5. 刷新工具摘要到 .claude/CLAUDE.md
-
-```bash
-sh <SKILL_DIR>/scripts/refresh.sh $PROJECT_ROOT
-```
-
-其中 `<SKILL_DIR>` 是此 skill 所在的目录（根据 SKILL.md 的加载路径推导）。
