@@ -19,30 +19,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh .claude/hooks/session-start-mcp-sync.sh",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/mcp-sync.sh",
             "timeout": 120
-          }
-        ]
-      }
-    ],
-    "FileChanged": [
-      {
-        "matcher": "/User/qiankun/.mcp-manager.json",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/on-tools-md-changed.sh",
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "mcp-manager.json",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/on-tools-md-changed.sh",
-            "timeout": 10
           }
         ]
       }

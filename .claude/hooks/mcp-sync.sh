@@ -1,5 +1,5 @@
 #!/bin/sh
-# SessionStart hook: 检查环境、同步 MCP Server bake 状态、输出工具摘要到 Claude 上下文。
+# SessionStart hook: 检查环境、同步 MCP Server 状态、输出工具摘要到 Claude 上下文。
 
 set -eu
 
