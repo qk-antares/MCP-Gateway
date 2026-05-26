@@ -22,6 +22,18 @@ validate_config() {
   return 0
 }
 
+# 移除 settings.json 中的 allowedMcpServers 配置
+remove_allowed_mcp_servers() {
+  settings_file="$PROJECT_ROOT/.claude/settings.json"
+  if [ -f "$settings_file" ] && command -v jq >/dev/null 2>&1; then
+    tmp_file=$(mktemp)
+    jq 'del(.allowedMcpServers)' "$settings_file" > "$tmp_file" && mv "$tmp_file" "$settings_file"
+  fi
+}
+
+# 提前将 uv 及相关工具的默认安装路径加入 PATH
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+
 # ── 1. 环境检查：uv ──
 if ! command -v uv >/dev/null 2>&1; then
   uv_tag=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
@@ -35,14 +47,18 @@ allow-insecure-host = ["yum.tbsite.net"]
 index-url = "http://yum.tbsite.net/aliyun-pypi/simple/"
 extra-index-url = ["http://yum.tbsite.net/pypi/simple/"]
 UVCONF
-  export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
   command -v uv >/dev/null 2>&1 || exit 0
 fi
+
+uv tool update-shell >/dev/null 2>&1 || true
 
 # ── 2. 环境检查：mcp2cli ──
 if ! command -v mcp2cli >/dev/null 2>&1; then
   uv tool install --force mcp2cli >/dev/null 2>&1
-  command -v mcp2cli >/dev/null 2>&1 || exit 0
+  if ! command -v mcp2cli >/dev/null 2>&1; then
+    remove_allowed_mcp_servers
+    exit 0
+  fi
 fi
 
 # ── 3. 环境检查：jq ──
