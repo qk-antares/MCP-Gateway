@@ -10,7 +10,7 @@
 - **认证方式**：无认证 / Bearer Token / API Key / OAuth
 - **级别**：项目级（默认）还是用户级：
   - **项目级**（默认）：写入 `$PROJECT_ROOT/mcp-manager.json`，仅当前项目生效
-  - **用户级**：写入 `~/.mcp-config.json`，对所有项目生效。用户表达"全局/用户级/global/-g/--global/所有项目通用"等意图时，视为用户级。未明确指定时默认项目级。
+  - **用户级**：写入 `~/.mcp-manager.json`，对所有项目生效。用户表达"全局/用户级/global/-g/--global/所有项目通用"等意图时，视为用户级。未明确指定时默认项目级。
 
 ### 2. 执行 bake create
 
@@ -64,7 +64,7 @@ mcp2cli @<name> --list
 # 项目级（默认）
 TARGET="$PROJECT_ROOT/mcp-manager.json"
 # 用户级（-g）
-TARGET="~/.mcp-config.json"
+TARGET="~/.mcp-manager.json"
 ```
 
 **HTTP 类型**：

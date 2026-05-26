@@ -6,7 +6,7 @@
 
 ### 第一步：确定目标
 
-.claude/CLAUDE.md 中 `<!-- MCP_MANAGER_TOOLS_START -->` 和 `<!-- MCP_MANAGER_TOOLS_END -->` 之间列出了所有已连接 MCP Server 的工具摘要，格式为：
+`<!-- MCP_MANAGER_TOOLS_START -->` 和 `<!-- MCP_MANAGER_TOOLS_END -->` 之间列出了所有已连接 MCP Server 的工具摘要，格式为：
 
 ```
 [server-name]

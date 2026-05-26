@@ -29,7 +29,6 @@ pip install mcp2cli
 
 | 意图 | 参考文档 |
 |------|----------|
-| 同步 MCP Server | 阅读 `references/sync-servers.md` |
 | 查看已连接的 MCP Server / 查看工具列表 | 阅读 `references/list-servers.md` |
 | 添加 / 连接新的 MCP Server | 阅读 `references/add-server.md` |
 | 移除 / 删除 MCP Server | 阅读 `references/remove-server.md` |
